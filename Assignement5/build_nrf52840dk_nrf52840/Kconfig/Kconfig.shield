@@ -1,1 +1,1 @@
-osource "/home/pedreiras/Nordic/ncs/nrf/boards/shields/*/Kconfig.shield"
+osource "C:/ncs/v1.9.1/nrf/boards/shields/*/Kconfig.shield"

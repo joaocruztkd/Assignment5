@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_ENTROPY_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -40,6 +43,13 @@ static inline int entropy_get_entropy(const struct device * dev, uint8_t * buffe
 	compiler_barrier();
 	return z_impl_entropy_get_entropy(dev, buffer, length);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define entropy_get_entropy(dev, buffer, length) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ENTROPY_GET_ENTROPY, entropy_get_entropy, dev, buffer, length); 	retval = entropy_get_entropy(dev, buffer, length); 	sys_port_trace_syscall_exit(K_SYSCALL_ENTROPY_GET_ENTROPY, entropy_get_entropy, dev, buffer, length, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

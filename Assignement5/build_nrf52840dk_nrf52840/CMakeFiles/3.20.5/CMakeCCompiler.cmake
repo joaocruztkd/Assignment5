@@ -1,4 +1,4 @@
-set(CMAKE_C_COMPILER "/opt/gnuarmemb/bin/arm-none-eabi-gcc")
+set(CMAKE_C_COMPILER "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-gcc.exe")
 set(CMAKE_C_COMPILER_ARG1 "")
 set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_COMPILER_VERSION "9.2.1")
@@ -18,11 +18,11 @@ set(CMAKE_C_SIMULATE_VERSION "")
 
 
 
-set(CMAKE_AR "/opt/gnuarmemb/bin/arm-none-eabi-ar")
-set(CMAKE_C_COMPILER_AR "/opt/gnuarmemb/bin/arm-none-eabi-gcc-ar")
-set(CMAKE_RANLIB "/opt/gnuarmemb/bin/arm-none-eabi-ranlib")
-set(CMAKE_C_COMPILER_RANLIB "/opt/gnuarmemb/bin/arm-none-eabi-gcc-ranlib")
-set(CMAKE_LINKER "/opt/gnuarmemb/bin/arm-none-eabi-ld.bfd")
+set(CMAKE_AR "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-ar.exe")
+set(CMAKE_C_COMPILER_AR "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-gcc-ar.exe")
+set(CMAKE_RANLIB "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-ranlib.exe")
+set(CMAKE_C_COMPILER_RANLIB "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-gcc-ranlib.exe")
+set(CMAKE_LINKER "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-ld.bfd.exe")
 set(CMAKE_MT "")
 set(CMAKE_COMPILER_IS_GNUCC 1)
 set(CMAKE_C_COMPILER_LOADED 1)

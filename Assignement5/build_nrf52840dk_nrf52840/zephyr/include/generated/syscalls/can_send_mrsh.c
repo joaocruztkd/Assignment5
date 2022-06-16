@@ -7,7 +7,7 @@
 #endif
 #include <syscalls/can.h>
 
-extern int z_vrfy_can_send(const struct device * dev, const struct zcan_frame * msg, k_timeout_t timeout, can_tx_callback_t callback_isr, void * callback_arg);
+extern int z_vrfy_can_send(const struct device * dev, const struct zcan_frame * frame, k_timeout_t timeout, can_tx_callback_t callback, void * user_data);
 uintptr_t z_mrsh_can_send(uintptr_t arg0, uintptr_t arg1, uintptr_t arg2,
 		uintptr_t arg3, uintptr_t arg4, uintptr_t arg5, void *ssf)
 {

@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_SOCKET_SELECT_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -40,6 +43,13 @@ static inline int zsock_select(int nfds, zsock_fd_set * readfds, zsock_fd_set * 
 	compiler_barrier();
 	return z_impl_zsock_select(nfds, readfds, writefds, exceptfds, timeout);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_select(nfds, readfds, writefds, exceptfds, timeout) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SELECT, zsock_select, nfds, readfds, writefds, exceptfds, timeout); 	retval = zsock_select(nfds, readfds, writefds, exceptfds, timeout); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SELECT, zsock_select, nfds, readfds, writefds, exceptfds, timeout, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

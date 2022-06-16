@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_RAND32_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline uint32_t sys_rand32_get(void)
 	return z_impl_sys_rand32_get();
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define sys_rand32_get() ({ 	uint32_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SYS_RAND32_GET, sys_rand32_get); 	retval = sys_rand32_get(); 	sys_port_trace_syscall_exit(K_SYSCALL_SYS_RAND32_GET, sys_rand32_get, retval); 	retval; })
+#endif
+#endif
+
 
 extern void z_impl_sys_rand_get(void * dst, size_t len);
 
@@ -58,6 +68,13 @@ static inline void sys_rand_get(void * dst, size_t len)
 	z_impl_sys_rand_get(dst, len);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define sys_rand_get(dst, len) do { 	sys_port_trace_syscall_enter(K_SYSCALL_SYS_RAND_GET, sys_rand_get, dst, len); 	sys_rand_get(dst, len); 	sys_port_trace_syscall_exit(K_SYSCALL_SYS_RAND_GET, sys_rand_get, dst, len); } while(false)
+#endif
+#endif
+
 
 extern int z_impl_sys_csrand_get(void * dst, size_t len);
 
@@ -73,6 +90,13 @@ static inline int sys_csrand_get(void * dst, size_t len)
 	compiler_barrier();
 	return z_impl_sys_csrand_get(dst, len);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define sys_csrand_get(dst, len) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SYS_CSRAND_GET, sys_csrand_get, dst, len); 	retval = sys_csrand_get(dst, len); 	sys_port_trace_syscall_exit(K_SYSCALL_SYS_CSRAND_GET, sys_csrand_get, dst, len, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

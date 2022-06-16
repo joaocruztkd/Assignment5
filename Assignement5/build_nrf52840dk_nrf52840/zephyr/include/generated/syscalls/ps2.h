@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_PS2_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int ps2_config(const struct device * dev, ps2_callback_t callback_
 	return z_impl_ps2_config(dev, callback_isr);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ps2_config(dev, callback_isr) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PS2_CONFIG, ps2_config, dev, callback_isr); 	retval = ps2_config(dev, callback_isr); 	sys_port_trace_syscall_exit(K_SYSCALL_PS2_CONFIG, ps2_config, dev, callback_isr, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_ps2_write(const struct device * dev, uint8_t value);
 
@@ -56,6 +66,13 @@ static inline int ps2_write(const struct device * dev, uint8_t value)
 	compiler_barrier();
 	return z_impl_ps2_write(dev, value);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ps2_write(dev, value) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PS2_WRITE, ps2_write, dev, value); 	retval = ps2_write(dev, value); 	sys_port_trace_syscall_exit(K_SYSCALL_PS2_WRITE, ps2_write, dev, value, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_ps2_read(const struct device * dev, uint8_t * value);
@@ -73,6 +90,13 @@ static inline int ps2_read(const struct device * dev, uint8_t * value)
 	return z_impl_ps2_read(dev, value);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ps2_read(dev, value) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PS2_READ, ps2_read, dev, value); 	retval = ps2_read(dev, value); 	sys_port_trace_syscall_exit(K_SYSCALL_PS2_READ, ps2_read, dev, value, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_ps2_enable_callback(const struct device * dev);
 
@@ -89,6 +113,13 @@ static inline int ps2_enable_callback(const struct device * dev)
 	return z_impl_ps2_enable_callback(dev);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ps2_enable_callback(dev) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PS2_ENABLE_CALLBACK, ps2_enable_callback, dev); 	retval = ps2_enable_callback(dev); 	sys_port_trace_syscall_exit(K_SYSCALL_PS2_ENABLE_CALLBACK, ps2_enable_callback, dev, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_ps2_disable_callback(const struct device * dev);
 
@@ -104,6 +135,13 @@ static inline int ps2_disable_callback(const struct device * dev)
 	compiler_barrier();
 	return z_impl_ps2_disable_callback(dev);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ps2_disable_callback(dev) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PS2_DISABLE_CALLBACK, ps2_disable_callback, dev); 	retval = ps2_disable_callback(dev); 	sys_port_trace_syscall_exit(K_SYSCALL_PS2_DISABLE_CALLBACK, ps2_disable_callback, dev, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

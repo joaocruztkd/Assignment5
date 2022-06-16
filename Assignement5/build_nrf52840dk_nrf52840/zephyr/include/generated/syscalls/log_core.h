@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_LOG_CORE_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -42,6 +45,13 @@ static inline void z_log_string_from_user(uint32_t src_level_val, const char * s
 	z_impl_z_log_string_from_user(src_level_val, str);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define z_log_string_from_user(src_level_val, str) do { 	sys_port_trace_syscall_enter(K_SYSCALL_Z_LOG_STRING_FROM_USER, z_log_string_from_user, src_level_val, str); 	z_log_string_from_user(src_level_val, str); 	sys_port_trace_syscall_exit(K_SYSCALL_Z_LOG_STRING_FROM_USER, z_log_string_from_user, src_level_val, str); } while(false)
+#endif
+#endif
+
 
 extern void z_impl_z_log_hexdump_from_user(uint32_t src_level_val, const char * metadata, const uint8_t * data, uint32_t len);
 
@@ -58,6 +68,13 @@ static inline void z_log_hexdump_from_user(uint32_t src_level_val, const char * 
 	compiler_barrier();
 	z_impl_z_log_hexdump_from_user(src_level_val, metadata, data, len);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define z_log_hexdump_from_user(src_level_val, metadata, data, len) do { 	sys_port_trace_syscall_enter(K_SYSCALL_Z_LOG_HEXDUMP_FROM_USER, z_log_hexdump_from_user, src_level_val, metadata, data, len); 	z_log_hexdump_from_user(src_level_val, metadata, data, len); 	sys_port_trace_syscall_exit(K_SYSCALL_Z_LOG_HEXDUMP_FROM_USER, z_log_hexdump_from_user, src_level_val, metadata, data, len); } while(false)
+#endif
+#endif
 
 
 #ifdef __cplusplus

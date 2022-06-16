@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_SPI_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int spi_transceive(const struct device * dev, const struct spi_con
 	return z_impl_spi_transceive(dev, config, tx_bufs, rx_bufs);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define spi_transceive(dev, config, tx_bufs, rx_bufs) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SPI_TRANSCEIVE, spi_transceive, dev, config, tx_bufs, rx_bufs); 	retval = spi_transceive(dev, config, tx_bufs, rx_bufs); 	sys_port_trace_syscall_exit(K_SYSCALL_SPI_TRANSCEIVE, spi_transceive, dev, config, tx_bufs, rx_bufs, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_spi_release(const struct device * dev, const struct spi_config * config);
 
@@ -56,6 +66,13 @@ static inline int spi_release(const struct device * dev, const struct spi_config
 	compiler_barrier();
 	return z_impl_spi_release(dev, config);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define spi_release(dev, config) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SPI_RELEASE, spi_release, dev, config); 	retval = spi_release(dev, config); 	sys_port_trace_syscall_exit(K_SYSCALL_SPI_RELEASE, spi_release, dev, config, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

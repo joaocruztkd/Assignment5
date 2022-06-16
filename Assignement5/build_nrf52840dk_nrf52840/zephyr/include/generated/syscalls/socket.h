@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_SOCKET_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline void * zsock_get_context_object(int sock)
 	return z_impl_zsock_get_context_object(sock);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_get_context_object(sock) ({ 	void * retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_GET_CONTEXT_OBJECT, zsock_get_context_object, sock); 	retval = zsock_get_context_object(sock); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_GET_CONTEXT_OBJECT, zsock_get_context_object, sock, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_socket(int family, int type, int proto);
 
@@ -56,6 +66,13 @@ static inline int zsock_socket(int family, int type, int proto)
 	compiler_barrier();
 	return z_impl_zsock_socket(family, type, proto);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_socket(family, type, proto) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SOCKET, zsock_socket, family, type, proto); 	retval = zsock_socket(family, type, proto); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SOCKET, zsock_socket, family, type, proto, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_socketpair(int family, int type, int proto, int * sv);
@@ -73,6 +90,13 @@ static inline int zsock_socketpair(int family, int type, int proto, int * sv)
 	return z_impl_zsock_socketpair(family, type, proto, sv);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_socketpair(family, type, proto, sv) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SOCKETPAIR, zsock_socketpair, family, type, proto, sv); 	retval = zsock_socketpair(family, type, proto, sv); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SOCKETPAIR, zsock_socketpair, family, type, proto, sv, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_close(int sock);
 
@@ -88,6 +112,13 @@ static inline int zsock_close(int sock)
 	compiler_barrier();
 	return z_impl_zsock_close(sock);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_close(sock) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_CLOSE, zsock_close, sock); 	retval = zsock_close(sock); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_CLOSE, zsock_close, sock, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_shutdown(int sock, int how);
@@ -105,6 +136,13 @@ static inline int zsock_shutdown(int sock, int how)
 	return z_impl_zsock_shutdown(sock, how);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_shutdown(sock, how) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SHUTDOWN, zsock_shutdown, sock, how); 	retval = zsock_shutdown(sock, how); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SHUTDOWN, zsock_shutdown, sock, how, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_bind(int sock, const struct sockaddr * addr, socklen_t addrlen);
 
@@ -120,6 +158,13 @@ static inline int zsock_bind(int sock, const struct sockaddr * addr, socklen_t a
 	compiler_barrier();
 	return z_impl_zsock_bind(sock, addr, addrlen);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_bind(sock, addr, addrlen) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_BIND, zsock_bind, sock, addr, addrlen); 	retval = zsock_bind(sock, addr, addrlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_BIND, zsock_bind, sock, addr, addrlen, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_connect(int sock, const struct sockaddr * addr, socklen_t addrlen);
@@ -137,6 +182,13 @@ static inline int zsock_connect(int sock, const struct sockaddr * addr, socklen_
 	return z_impl_zsock_connect(sock, addr, addrlen);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_connect(sock, addr, addrlen) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_CONNECT, zsock_connect, sock, addr, addrlen); 	retval = zsock_connect(sock, addr, addrlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_CONNECT, zsock_connect, sock, addr, addrlen, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_listen(int sock, int backlog);
 
@@ -152,6 +204,13 @@ static inline int zsock_listen(int sock, int backlog)
 	compiler_barrier();
 	return z_impl_zsock_listen(sock, backlog);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_listen(sock, backlog) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_LISTEN, zsock_listen, sock, backlog); 	retval = zsock_listen(sock, backlog); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_LISTEN, zsock_listen, sock, backlog, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_accept(int sock, struct sockaddr * addr, socklen_t * addrlen);
@@ -169,6 +228,13 @@ static inline int zsock_accept(int sock, struct sockaddr * addr, socklen_t * add
 	return z_impl_zsock_accept(sock, addr, addrlen);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_accept(sock, addr, addrlen) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_ACCEPT, zsock_accept, sock, addr, addrlen); 	retval = zsock_accept(sock, addr, addrlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_ACCEPT, zsock_accept, sock, addr, addrlen, retval); 	retval; })
+#endif
+#endif
+
 
 extern ssize_t z_impl_zsock_sendto(int sock, const void * buf, size_t len, int flags, const struct sockaddr * dest_addr, socklen_t addrlen);
 
@@ -184,6 +250,13 @@ static inline ssize_t zsock_sendto(int sock, const void * buf, size_t len, int f
 	compiler_barrier();
 	return z_impl_zsock_sendto(sock, buf, len, flags, dest_addr, addrlen);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_sendto(sock, buf, len, flags, dest_addr, addrlen) ({ 	ssize_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SENDTO, zsock_sendto, sock, buf, len, flags, dest_addr, addrlen); 	retval = zsock_sendto(sock, buf, len, flags, dest_addr, addrlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SENDTO, zsock_sendto, sock, buf, len, flags, dest_addr, addrlen, retval); 	retval; })
+#endif
+#endif
 
 
 extern ssize_t z_impl_zsock_sendmsg(int sock, const struct msghdr * msg, int flags);
@@ -201,6 +274,13 @@ static inline ssize_t zsock_sendmsg(int sock, const struct msghdr * msg, int fla
 	return z_impl_zsock_sendmsg(sock, msg, flags);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_sendmsg(sock, msg, flags) ({ 	ssize_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SENDMSG, zsock_sendmsg, sock, msg, flags); 	retval = zsock_sendmsg(sock, msg, flags); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SENDMSG, zsock_sendmsg, sock, msg, flags, retval); 	retval; })
+#endif
+#endif
+
 
 extern ssize_t z_impl_zsock_recvfrom(int sock, void * buf, size_t max_len, int flags, struct sockaddr * src_addr, socklen_t * addrlen);
 
@@ -216,6 +296,13 @@ static inline ssize_t zsock_recvfrom(int sock, void * buf, size_t max_len, int f
 	compiler_barrier();
 	return z_impl_zsock_recvfrom(sock, buf, max_len, flags, src_addr, addrlen);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_recvfrom(sock, buf, max_len, flags, src_addr, addrlen) ({ 	ssize_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_RECVFROM, zsock_recvfrom, sock, buf, max_len, flags, src_addr, addrlen); 	retval = zsock_recvfrom(sock, buf, max_len, flags, src_addr, addrlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_RECVFROM, zsock_recvfrom, sock, buf, max_len, flags, src_addr, addrlen, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_fcntl(int sock, int cmd, int flags);
@@ -233,6 +320,13 @@ static inline int zsock_fcntl(int sock, int cmd, int flags)
 	return z_impl_zsock_fcntl(sock, cmd, flags);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_fcntl(sock, cmd, flags) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_FCNTL, zsock_fcntl, sock, cmd, flags); 	retval = zsock_fcntl(sock, cmd, flags); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_FCNTL, zsock_fcntl, sock, cmd, flags, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_poll(struct zsock_pollfd * fds, int nfds, int timeout);
 
@@ -248,6 +342,13 @@ static inline int zsock_poll(struct zsock_pollfd * fds, int nfds, int timeout)
 	compiler_barrier();
 	return z_impl_zsock_poll(fds, nfds, timeout);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_poll(fds, nfds, timeout) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_POLL, zsock_poll, fds, nfds, timeout); 	retval = zsock_poll(fds, nfds, timeout); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_POLL, zsock_poll, fds, nfds, timeout, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_getsockopt(int sock, int level, int optname, void * optval, socklen_t * optlen);
@@ -265,6 +366,13 @@ static inline int zsock_getsockopt(int sock, int level, int optname, void * optv
 	return z_impl_zsock_getsockopt(sock, level, optname, optval, optlen);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_getsockopt(sock, level, optname, optval, optlen) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_GETSOCKOPT, zsock_getsockopt, sock, level, optname, optval, optlen); 	retval = zsock_getsockopt(sock, level, optname, optval, optlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_GETSOCKOPT, zsock_getsockopt, sock, level, optname, optval, optlen, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_setsockopt(int sock, int level, int optname, const void * optval, socklen_t optlen);
 
@@ -280,6 +388,13 @@ static inline int zsock_setsockopt(int sock, int level, int optname, const void 
 	compiler_barrier();
 	return z_impl_zsock_setsockopt(sock, level, optname, optval, optlen);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_setsockopt(sock, level, optname, optval, optlen) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_SETSOCKOPT, zsock_setsockopt, sock, level, optname, optval, optlen); 	retval = zsock_setsockopt(sock, level, optname, optval, optlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_SETSOCKOPT, zsock_setsockopt, sock, level, optname, optval, optlen, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_getsockname(int sock, struct sockaddr * addr, socklen_t * addrlen);
@@ -297,6 +412,13 @@ static inline int zsock_getsockname(int sock, struct sockaddr * addr, socklen_t 
 	return z_impl_zsock_getsockname(sock, addr, addrlen);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_getsockname(sock, addr, addrlen) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_GETSOCKNAME, zsock_getsockname, sock, addr, addrlen); 	retval = zsock_getsockname(sock, addr, addrlen); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_GETSOCKNAME, zsock_getsockname, sock, addr, addrlen, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_zsock_gethostname(char * buf, size_t len);
 
@@ -312,6 +434,13 @@ static inline int zsock_gethostname(char * buf, size_t len)
 	compiler_barrier();
 	return z_impl_zsock_gethostname(buf, len);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_gethostname(buf, len) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_GETHOSTNAME, zsock_gethostname, buf, len); 	retval = zsock_gethostname(buf, len); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_GETHOSTNAME, zsock_gethostname, buf, len, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_zsock_inet_pton(sa_family_t family, const char * src, void * dst);
@@ -329,6 +458,13 @@ static inline int zsock_inet_pton(sa_family_t family, const char * src, void * d
 	return z_impl_zsock_inet_pton(family, src, dst);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define zsock_inet_pton(family, src, dst) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_ZSOCK_INET_PTON, zsock_inet_pton, family, src, dst); 	retval = zsock_inet_pton(family, src, dst); 	sys_port_trace_syscall_exit(K_SYSCALL_ZSOCK_INET_PTON, zsock_inet_pton, family, src, dst, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_z_zsock_getaddrinfo_internal(const char * host, const char * service, const struct zsock_addrinfo * hints, struct zsock_addrinfo * res);
 
@@ -344,6 +480,13 @@ static inline int z_zsock_getaddrinfo_internal(const char * host, const char * s
 	compiler_barrier();
 	return z_impl_z_zsock_getaddrinfo_internal(host, service, hints, res);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define z_zsock_getaddrinfo_internal(host, service, hints, res) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_Z_ZSOCK_GETADDRINFO_INTERNAL, z_zsock_getaddrinfo_internal, host, service, hints, res); 	retval = z_zsock_getaddrinfo_internal(host, service, hints, res); 	sys_port_trace_syscall_exit(K_SYSCALL_Z_ZSOCK_GETADDRINFO_INTERNAL, z_zsock_getaddrinfo_internal, host, service, hints, res, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

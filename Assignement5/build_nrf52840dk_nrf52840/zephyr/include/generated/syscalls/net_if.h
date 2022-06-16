@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_NET_IF_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int net_if_ipv6_addr_lookup_by_index(const struct in6_addr * addr)
 	return z_impl_net_if_ipv6_addr_lookup_by_index(addr);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv6_addr_lookup_by_index(addr) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV6_ADDR_LOOKUP_BY_INDEX, net_if_ipv6_addr_lookup_by_index, addr); 	retval = net_if_ipv6_addr_lookup_by_index(addr); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV6_ADDR_LOOKUP_BY_INDEX, net_if_ipv6_addr_lookup_by_index, addr, retval); 	retval; })
+#endif
+#endif
+
 
 extern bool z_impl_net_if_ipv6_addr_add_by_index(int index, struct in6_addr * addr, enum net_addr_type addr_type, uint32_t vlifetime);
 
@@ -56,6 +66,13 @@ static inline bool net_if_ipv6_addr_add_by_index(int index, struct in6_addr * ad
 	compiler_barrier();
 	return z_impl_net_if_ipv6_addr_add_by_index(index, addr, addr_type, vlifetime);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv6_addr_add_by_index(index, addr, addr_type, vlifetime) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV6_ADDR_ADD_BY_INDEX, net_if_ipv6_addr_add_by_index, index, addr, addr_type, vlifetime); 	retval = net_if_ipv6_addr_add_by_index(index, addr, addr_type, vlifetime); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV6_ADDR_ADD_BY_INDEX, net_if_ipv6_addr_add_by_index, index, addr, addr_type, vlifetime, retval); 	retval; })
+#endif
+#endif
 
 
 extern bool z_impl_net_if_ipv6_addr_rm_by_index(int index, const struct in6_addr * addr);
@@ -73,6 +90,13 @@ static inline bool net_if_ipv6_addr_rm_by_index(int index, const struct in6_addr
 	return z_impl_net_if_ipv6_addr_rm_by_index(index, addr);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv6_addr_rm_by_index(index, addr) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV6_ADDR_RM_BY_INDEX, net_if_ipv6_addr_rm_by_index, index, addr); 	retval = net_if_ipv6_addr_rm_by_index(index, addr); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV6_ADDR_RM_BY_INDEX, net_if_ipv6_addr_rm_by_index, index, addr, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_net_if_ipv4_addr_lookup_by_index(const struct in_addr * addr);
 
@@ -88,6 +112,13 @@ static inline int net_if_ipv4_addr_lookup_by_index(const struct in_addr * addr)
 	compiler_barrier();
 	return z_impl_net_if_ipv4_addr_lookup_by_index(addr);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv4_addr_lookup_by_index(addr) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV4_ADDR_LOOKUP_BY_INDEX, net_if_ipv4_addr_lookup_by_index, addr); 	retval = net_if_ipv4_addr_lookup_by_index(addr); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV4_ADDR_LOOKUP_BY_INDEX, net_if_ipv4_addr_lookup_by_index, addr, retval); 	retval; })
+#endif
+#endif
 
 
 extern bool z_impl_net_if_ipv4_addr_add_by_index(int index, struct in_addr * addr, enum net_addr_type addr_type, uint32_t vlifetime);
@@ -105,6 +136,13 @@ static inline bool net_if_ipv4_addr_add_by_index(int index, struct in_addr * add
 	return z_impl_net_if_ipv4_addr_add_by_index(index, addr, addr_type, vlifetime);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv4_addr_add_by_index(index, addr, addr_type, vlifetime) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV4_ADDR_ADD_BY_INDEX, net_if_ipv4_addr_add_by_index, index, addr, addr_type, vlifetime); 	retval = net_if_ipv4_addr_add_by_index(index, addr, addr_type, vlifetime); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV4_ADDR_ADD_BY_INDEX, net_if_ipv4_addr_add_by_index, index, addr, addr_type, vlifetime, retval); 	retval; })
+#endif
+#endif
+
 
 extern bool z_impl_net_if_ipv4_addr_rm_by_index(int index, const struct in_addr * addr);
 
@@ -120,6 +158,13 @@ static inline bool net_if_ipv4_addr_rm_by_index(int index, const struct in_addr 
 	compiler_barrier();
 	return z_impl_net_if_ipv4_addr_rm_by_index(index, addr);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv4_addr_rm_by_index(index, addr) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV4_ADDR_RM_BY_INDEX, net_if_ipv4_addr_rm_by_index, index, addr); 	retval = net_if_ipv4_addr_rm_by_index(index, addr); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV4_ADDR_RM_BY_INDEX, net_if_ipv4_addr_rm_by_index, index, addr, retval); 	retval; })
+#endif
+#endif
 
 
 extern bool z_impl_net_if_ipv4_set_netmask_by_index(int index, const struct in_addr * netmask);
@@ -137,6 +182,13 @@ static inline bool net_if_ipv4_set_netmask_by_index(int index, const struct in_a
 	return z_impl_net_if_ipv4_set_netmask_by_index(index, netmask);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv4_set_netmask_by_index(index, netmask) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV4_SET_NETMASK_BY_INDEX, net_if_ipv4_set_netmask_by_index, index, netmask); 	retval = net_if_ipv4_set_netmask_by_index(index, netmask); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV4_SET_NETMASK_BY_INDEX, net_if_ipv4_set_netmask_by_index, index, netmask, retval); 	retval; })
+#endif
+#endif
+
 
 extern bool z_impl_net_if_ipv4_set_gw_by_index(int index, const struct in_addr * gw);
 
@@ -153,6 +205,13 @@ static inline bool net_if_ipv4_set_gw_by_index(int index, const struct in_addr *
 	return z_impl_net_if_ipv4_set_gw_by_index(index, gw);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_ipv4_set_gw_by_index(index, gw) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_IPV4_SET_GW_BY_INDEX, net_if_ipv4_set_gw_by_index, index, gw); 	retval = net_if_ipv4_set_gw_by_index(index, gw); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_IPV4_SET_GW_BY_INDEX, net_if_ipv4_set_gw_by_index, index, gw, retval); 	retval; })
+#endif
+#endif
+
 
 extern struct net_if * z_impl_net_if_get_by_index(int index);
 
@@ -168,6 +227,13 @@ static inline struct net_if * net_if_get_by_index(int index)
 	compiler_barrier();
 	return z_impl_net_if_get_by_index(index);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_if_get_by_index(index) ({ 	struct net_if * retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_IF_GET_BY_INDEX, net_if_get_by_index, index); 	retval = net_if_get_by_index(index); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_IF_GET_BY_INDEX, net_if_get_by_index, index, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

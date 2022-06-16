@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_EEPROM_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int eeprom_read(const struct device * dev, off_t offset, void * da
 	return z_impl_eeprom_read(dev, offset, data, len);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define eeprom_read(dev, offset, data, len) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_EEPROM_READ, eeprom_read, dev, offset, data, len); 	retval = eeprom_read(dev, offset, data, len); 	sys_port_trace_syscall_exit(K_SYSCALL_EEPROM_READ, eeprom_read, dev, offset, data, len, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_eeprom_write(const struct device * dev, off_t offset, const void * data, size_t len);
 
@@ -57,6 +67,13 @@ static inline int eeprom_write(const struct device * dev, off_t offset, const vo
 	return z_impl_eeprom_write(dev, offset, data, len);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define eeprom_write(dev, offset, data, len) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_EEPROM_WRITE, eeprom_write, dev, offset, data, len); 	retval = eeprom_write(dev, offset, data, len); 	sys_port_trace_syscall_exit(K_SYSCALL_EEPROM_WRITE, eeprom_write, dev, offset, data, len, retval); 	retval; })
+#endif
+#endif
+
 
 extern size_t z_impl_eeprom_get_size(const struct device * dev);
 
@@ -72,6 +89,13 @@ static inline size_t eeprom_get_size(const struct device * dev)
 	compiler_barrier();
 	return z_impl_eeprom_get_size(dev);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define eeprom_get_size(dev) ({ 	size_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_EEPROM_GET_SIZE, eeprom_get_size, dev); 	retval = eeprom_get_size(dev); 	sys_port_trace_syscall_exit(K_SYSCALL_EEPROM_GET_SIZE, eeprom_get_size, dev, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

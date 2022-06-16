@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_KOBJECT_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -42,6 +45,13 @@ static inline void k_object_access_grant(const void * object, struct k_thread * 
 	z_impl_k_object_access_grant(object, thread);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define k_object_access_grant(object, thread) do { 	sys_port_trace_syscall_enter(K_SYSCALL_K_OBJECT_ACCESS_GRANT, k_object_access_grant, object, thread); 	k_object_access_grant(object, thread); 	sys_port_trace_syscall_exit(K_SYSCALL_K_OBJECT_ACCESS_GRANT, k_object_access_grant, object, thread); } while(false)
+#endif
+#endif
+
 
 extern void z_impl_k_object_release(const void * object);
 
@@ -59,6 +69,13 @@ static inline void k_object_release(const void * object)
 	z_impl_k_object_release(object);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define k_object_release(object) do { 	sys_port_trace_syscall_enter(K_SYSCALL_K_OBJECT_RELEASE, k_object_release, object); 	k_object_release(object); 	sys_port_trace_syscall_exit(K_SYSCALL_K_OBJECT_RELEASE, k_object_release, object); } while(false)
+#endif
+#endif
+
 
 extern void * z_impl_k_object_alloc(enum k_objects otype);
 
@@ -74,6 +91,13 @@ static inline void * k_object_alloc(enum k_objects otype)
 	compiler_barrier();
 	return z_impl_k_object_alloc(otype);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define k_object_alloc(otype) ({ 	void * retval; 	sys_port_trace_syscall_enter(K_SYSCALL_K_OBJECT_ALLOC, k_object_alloc, otype); 	retval = k_object_alloc(otype); 	sys_port_trace_syscall_exit(K_SYSCALL_K_OBJECT_ALLOC, k_object_alloc, otype, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

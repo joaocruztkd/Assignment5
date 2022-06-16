@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_NET_IP_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int net_addr_pton(sa_family_t family, const char * src, void * dst
 	return z_impl_net_addr_pton(family, src, dst);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_addr_pton(family, src, dst) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_ADDR_PTON, net_addr_pton, family, src, dst); 	retval = net_addr_pton(family, src, dst); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_ADDR_PTON, net_addr_pton, family, src, dst, retval); 	retval; })
+#endif
+#endif
+
 
 extern char * z_impl_net_addr_ntop(sa_family_t family, const void * src, char * dst, size_t size);
 
@@ -56,6 +66,13 @@ static inline char * net_addr_ntop(sa_family_t family, const void * src, char * 
 	compiler_barrier();
 	return z_impl_net_addr_ntop(family, src, dst, size);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define net_addr_ntop(family, src, dst, size) ({ 	char * retval; 	sys_port_trace_syscall_enter(K_SYSCALL_NET_ADDR_NTOP, net_addr_ntop, family, src, dst, size); 	retval = net_addr_ntop(family, src, dst, size); 	sys_port_trace_syscall_exit(K_SYSCALL_NET_ADDR_NTOP, net_addr_ntop, family, src, dst, size, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

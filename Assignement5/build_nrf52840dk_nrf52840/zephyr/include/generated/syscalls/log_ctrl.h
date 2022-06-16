@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_LOG_CTRL_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -42,6 +45,13 @@ static inline void log_panic(void)
 	z_impl_log_panic();
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define log_panic() do { 	sys_port_trace_syscall_enter(K_SYSCALL_LOG_PANIC, log_panic); 	log_panic(); 	sys_port_trace_syscall_exit(K_SYSCALL_LOG_PANIC, log_panic); } while(false)
+#endif
+#endif
+
 
 extern bool z_impl_log_process(bool bypass);
 
@@ -57,6 +67,13 @@ static inline bool log_process(bool bypass)
 	compiler_barrier();
 	return z_impl_log_process(bypass);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define log_process(bypass) ({ 	bool retval; 	sys_port_trace_syscall_enter(K_SYSCALL_LOG_PROCESS, log_process, bypass); 	retval = log_process(bypass); 	sys_port_trace_syscall_exit(K_SYSCALL_LOG_PROCESS, log_process, bypass, retval); 	retval; })
+#endif
+#endif
 
 
 extern uint32_t z_impl_log_buffered_cnt(void);
@@ -74,6 +91,13 @@ static inline uint32_t log_buffered_cnt(void)
 	return z_impl_log_buffered_cnt();
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define log_buffered_cnt() ({ 	uint32_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_LOG_BUFFERED_CNT, log_buffered_cnt); 	retval = log_buffered_cnt(); 	sys_port_trace_syscall_exit(K_SYSCALL_LOG_BUFFERED_CNT, log_buffered_cnt, retval); 	retval; })
+#endif
+#endif
+
 
 extern uint32_t z_impl_log_filter_set(struct log_backend const *const backend, uint32_t domain_id, int16_t source_id, uint32_t level);
 
@@ -89,6 +113,13 @@ static inline uint32_t log_filter_set(struct log_backend const *const backend, u
 	compiler_barrier();
 	return z_impl_log_filter_set(backend, domain_id, source_id, level);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define log_filter_set(backend, domain_id, source_id, level) ({ 	uint32_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_LOG_FILTER_SET, log_filter_set, backend, domain_id, source_id, level); 	retval = log_filter_set(backend, domain_id, source_id, level); 	sys_port_trace_syscall_exit(K_SYSCALL_LOG_FILTER_SET, log_filter_set, backend, domain_id, source_id, level, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_PWM_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int pwm_pin_set_cycles(const struct device * dev, uint32_t pwm, ui
 	return z_impl_pwm_pin_set_cycles(dev, pwm, period, pulse, flags);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define pwm_pin_set_cycles(dev, pwm, period, pulse, flags) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PWM_PIN_SET_CYCLES, pwm_pin_set_cycles, dev, pwm, period, pulse, flags); 	retval = pwm_pin_set_cycles(dev, pwm, period, pulse, flags); 	sys_port_trace_syscall_exit(K_SYSCALL_PWM_PIN_SET_CYCLES, pwm_pin_set_cycles, dev, pwm, period, pulse, flags, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_pwm_pin_enable_capture(const struct device * dev, uint32_t pwm);
 
@@ -57,6 +67,13 @@ static inline int pwm_pin_enable_capture(const struct device * dev, uint32_t pwm
 	return z_impl_pwm_pin_enable_capture(dev, pwm);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define pwm_pin_enable_capture(dev, pwm) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PWM_PIN_ENABLE_CAPTURE, pwm_pin_enable_capture, dev, pwm); 	retval = pwm_pin_enable_capture(dev, pwm); 	sys_port_trace_syscall_exit(K_SYSCALL_PWM_PIN_ENABLE_CAPTURE, pwm_pin_enable_capture, dev, pwm, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_pwm_pin_disable_capture(const struct device * dev, uint32_t pwm);
 
@@ -72,6 +89,13 @@ static inline int pwm_pin_disable_capture(const struct device * dev, uint32_t pw
 	compiler_barrier();
 	return z_impl_pwm_pin_disable_capture(dev, pwm);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define pwm_pin_disable_capture(dev, pwm) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PWM_PIN_DISABLE_CAPTURE, pwm_pin_disable_capture, dev, pwm); 	retval = pwm_pin_disable_capture(dev, pwm); 	sys_port_trace_syscall_exit(K_SYSCALL_PWM_PIN_DISABLE_CAPTURE, pwm_pin_disable_capture, dev, pwm, retval); 	retval; })
+#endif
+#endif
 
 
 extern int z_impl_pwm_pin_capture_cycles(const struct device * dev, uint32_t pwm, pwm_flags_t flags, uint32_t * period, uint32_t * pulse, k_timeout_t timeout);
@@ -95,6 +119,13 @@ static inline int pwm_pin_capture_cycles(const struct device * dev, uint32_t pwm
 	return z_impl_pwm_pin_capture_cycles(dev, pwm, flags, period, pulse, timeout);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define pwm_pin_capture_cycles(dev, pwm, flags, period, pulse, timeout) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PWM_PIN_CAPTURE_CYCLES, pwm_pin_capture_cycles, dev, pwm, flags, period, pulse, timeout); 	retval = pwm_pin_capture_cycles(dev, pwm, flags, period, pulse, timeout); 	sys_port_trace_syscall_exit(K_SYSCALL_PWM_PIN_CAPTURE_CYCLES, pwm_pin_capture_cycles, dev, pwm, flags, period, pulse, timeout, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_pwm_get_cycles_per_sec(const struct device * dev, uint32_t pwm, uint64_t * cycles);
 
@@ -110,6 +141,13 @@ static inline int pwm_get_cycles_per_sec(const struct device * dev, uint32_t pwm
 	compiler_barrier();
 	return z_impl_pwm_get_cycles_per_sec(dev, pwm, cycles);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define pwm_get_cycles_per_sec(dev, pwm, cycles) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PWM_GET_CYCLES_PER_SEC, pwm_get_cycles_per_sec, dev, pwm, cycles); 	retval = pwm_get_cycles_per_sec(dev, pwm, cycles); 	sys_port_trace_syscall_exit(K_SYSCALL_PWM_GET_CYCLES_PER_SEC, pwm_get_cycles_per_sec, dev, pwm, cycles, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

@@ -10,3 +10,6 @@ case K_OBJ_STACK: ret = sizeof(struct k_stack); break;
 case K_OBJ_THREAD: ret = sizeof(struct k_thread); break;
 case K_OBJ_TIMER: ret = sizeof(struct k_timer); break;
 case K_OBJ_CONDVAR: ret = sizeof(struct k_condvar); break;
+#ifdef CONFIG_EVENTS
+case K_OBJ_EVENT: ret = sizeof(struct k_event); break;
+#endif

@@ -46,6 +46,8 @@
 
 #define Z_SYSCALL_DRIVER_LED(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, led, LED)
 
+#define Z_SYSCALL_DRIVER_MBOX(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, mbox, MBOX)
+
 #define Z_SYSCALL_DRIVER_MDIO(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, mdio, MDIO)
 
 #define Z_SYSCALL_DRIVER_PINMUX(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, pinmux, PINMUX)
@@ -69,6 +71,10 @@
 #define Z_SYSCALL_DRIVER_WDT(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, wdt, WDT)
 
 #define Z_SYSCALL_DRIVER_UART_MUX(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, uart_mux, UART_MUX)
+
+#define Z_SYSCALL_DRIVER_ITS(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, its, ITS)
+
+#define Z_SYSCALL_DRIVER_PCIE_CTRL(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, pcie_ctrl, PCIE_CTRL)
 
 #define Z_SYSCALL_DRIVER_IVSHMEM(ptr, op) Z_SYSCALL_DRIVER_GEN(ptr, op, ivshmem, IVSHMEM)
 

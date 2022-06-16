@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_EC_HOST_CMD_PERIPH_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int ec_host_cmd_periph_init(const struct device * dev, struct ec_h
 	return z_impl_ec_host_cmd_periph_init(dev, rx_ctx);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ec_host_cmd_periph_init(dev, rx_ctx) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_EC_HOST_CMD_PERIPH_INIT, ec_host_cmd_periph_init, dev, rx_ctx); 	retval = ec_host_cmd_periph_init(dev, rx_ctx); 	sys_port_trace_syscall_exit(K_SYSCALL_EC_HOST_CMD_PERIPH_INIT, ec_host_cmd_periph_init, dev, rx_ctx, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_ec_host_cmd_periph_send(const struct device * dev, const struct ec_host_cmd_periph_tx_buf * tx_buf);
 
@@ -56,6 +66,13 @@ static inline int ec_host_cmd_periph_send(const struct device * dev, const struc
 	compiler_barrier();
 	return z_impl_ec_host_cmd_periph_send(dev, tx_buf);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ec_host_cmd_periph_send(dev, tx_buf) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_EC_HOST_CMD_PERIPH_SEND, ec_host_cmd_periph_send, dev, tx_buf); 	retval = ec_host_cmd_periph_send(dev, tx_buf); 	sys_port_trace_syscall_exit(K_SYSCALL_EC_HOST_CMD_PERIPH_SEND, ec_host_cmd_periph_send, dev, tx_buf, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

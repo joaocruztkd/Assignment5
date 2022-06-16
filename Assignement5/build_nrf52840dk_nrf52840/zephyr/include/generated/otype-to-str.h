@@ -15,6 +15,9 @@ case K_OBJ_NET_IF: ret = "net_if"; break;
 case K_OBJ_SYS_MUTEX: ret = "sys_mutex"; break;
 case K_OBJ_FUTEX: ret = "k_futex"; break;
 case K_OBJ_CONDVAR: ret = "k_condvar"; break;
+#ifdef CONFIG_EVENTS
+case K_OBJ_EVENT: ret = "k_event"; break;
+#endif
 /* Driver subsystems */
 case K_OBJ_DRIVER_CRYPTO: ret = "crypto driver"; break;
 case K_OBJ_DRIVER_ADC: ret = "adc driver"; break;
@@ -37,6 +40,7 @@ case K_OBJ_DRIVER_I2S: ret = "i2s driver"; break;
 case K_OBJ_DRIVER_IPM: ret = "ipm driver"; break;
 case K_OBJ_DRIVER_KSCAN: ret = "kscan driver"; break;
 case K_OBJ_DRIVER_LED: ret = "led driver"; break;
+case K_OBJ_DRIVER_MBOX: ret = "mbox driver"; break;
 case K_OBJ_DRIVER_MDIO: ret = "mdio driver"; break;
 case K_OBJ_DRIVER_PINMUX: ret = "pinmux driver"; break;
 case K_OBJ_DRIVER_PS2: ret = "ps2 driver"; break;
@@ -49,5 +53,7 @@ case K_OBJ_DRIVER_SYSCON: ret = "syscon driver"; break;
 case K_OBJ_DRIVER_UART: ret = "uart driver"; break;
 case K_OBJ_DRIVER_WDT: ret = "wdt driver"; break;
 case K_OBJ_DRIVER_UART_MUX: ret = "uart_mux driver"; break;
+case K_OBJ_DRIVER_ITS: ret = "its driver"; break;
+case K_OBJ_DRIVER_PCIE_CTRL: ret = "pcie_ctrl driver"; break;
 case K_OBJ_DRIVER_IVSHMEM: ret = "ivshmem driver"; break;
 case K_OBJ_DRIVER_ETHPHY: ret = "ethphy driver"; break;

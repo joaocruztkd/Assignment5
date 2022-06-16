@@ -77,11 +77,11 @@
 			status = "okay";
 		};
 		uart0: uart@40002000 {
+			compatible = "nordic,nrf-uarte";
 			reg = < 0x40002000 0x1000 >;
 			interrupts = < 0x2 0x1 >;
 			status = "okay";
 			label = "UART_0";
-			compatible = "nordic,nrf-uarte";
 			current-speed = < 0x1c200 >;
 			tx-pin = < 0x6 >;
 			rx-pin = < 0x8 >;
@@ -91,6 +91,7 @@
 			cts-pull-up;
 		};
 		i2c0: arduino_i2c: i2c@40003000 {
+			compatible = "nordic,nrf-twi";
 			#address-cells = < 0x1 >;
 			#size-cells = < 0x0 >;
 			reg = < 0x40003000 0x1000 >;
@@ -98,23 +99,23 @@
 			interrupts = < 0x3 0x1 >;
 			status = "okay";
 			label = "I2C_0";
-			compatible = "nordic,nrf-twi";
 			sda-pin = < 0x1a >;
 			scl-pin = < 0x1b >;
 		};
 		spi0: spi@40003000 {
+			compatible = "nordic,nrf-spi";
 			#address-cells = < 0x1 >;
 			#size-cells = < 0x0 >;
 			reg = < 0x40003000 0x1000 >;
 			interrupts = < 0x3 0x1 >;
 			status = "disabled";
 			label = "SPI_0";
-			compatible = "nordic,nrf-spi";
 			sck-pin = < 0x1b >;
 			mosi-pin = < 0x1a >;
 			miso-pin = < 0x1d >;
 		};
 		i2c1: i2c@40004000 {
+			compatible = "nordic,nrf-twi";
 			#address-cells = < 0x1 >;
 			#size-cells = < 0x0 >;
 			reg = < 0x40004000 0x1000 >;
@@ -122,18 +123,17 @@
 			interrupts = < 0x4 0x1 >;
 			status = "disabled";
 			label = "I2C_1";
-			compatible = "nordic,nrf-twi";
 			sda-pin = < 0x1e >;
 			scl-pin = < 0x1f >;
 		};
 		spi1: spi@40004000 {
+			compatible = "nordic,nrf-spi";
 			#address-cells = < 0x1 >;
 			#size-cells = < 0x0 >;
 			reg = < 0x40004000 0x1000 >;
 			interrupts = < 0x4 0x1 >;
 			status = "okay";
 			label = "SPI_1";
-			compatible = "nordic,nrf-spi";
 			sck-pin = < 0x1f >;
 			mosi-pin = < 0x1e >;
 			miso-pin = < 0x28 >;
@@ -365,13 +365,13 @@
 			#pwm-cells = < 0x1 >;
 		};
 		spi2: spi@40023000 {
+			compatible = "nordic,nrf-spi";
 			#address-cells = < 0x1 >;
 			#size-cells = < 0x0 >;
 			reg = < 0x40023000 0x1000 >;
 			interrupts = < 0x23 0x1 >;
 			status = "disabled";
 			label = "SPI_2";
-			compatible = "nordic,nrf-spi";
 			sck-pin = < 0x13 >;
 			mosi-pin = < 0x14 >;
 			miso-pin = < 0x15 >;
@@ -502,6 +502,9 @@
 			};
 		};
 	};
+	pinctrl: pin-controller {
+		compatible = "nordic,nrf-pinctrl";
+	};
 	cpus {
 		#address-cells = < 0x1 >;
 		#size-cells = < 0x0 >;
@@ -519,8 +522,6 @@
 		generator = < &timer2 >;
 		channel-count = < 0x3 >;
 		clock-prescaler = < 0x0 >;
-		ppi-base = < 0x0 >;
-		gpiote-base = < 0x0 >;
 		#pwm-cells = < 0x1 >;
 	};
 	leds {

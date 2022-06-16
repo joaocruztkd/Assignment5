@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_KERNEL_H
 
 
+
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -734,6 +737,93 @@ static inline int k_futex_wake(struct k_futex * futex, bool wake_all)
 #endif
 	compiler_barrier();
 	return z_impl_k_futex_wake(futex, wake_all);
+}
+
+
+extern void z_impl_k_event_init(struct k_event * event);
+
+__pinned_func
+static inline void k_event_init(struct k_event * event)
+{
+#ifdef CONFIG_USERSPACE
+	if (z_syscall_trap()) {
+		/* coverity[OVERRUN] */
+		arch_syscall_invoke1(*(uintptr_t *)&event, K_SYSCALL_K_EVENT_INIT);
+		return;
+	}
+#endif
+	compiler_barrier();
+	z_impl_k_event_init(event);
+}
+
+
+extern void z_impl_k_event_post(struct k_event * event, uint32_t events);
+
+__pinned_func
+static inline void k_event_post(struct k_event * event, uint32_t events)
+{
+#ifdef CONFIG_USERSPACE
+	if (z_syscall_trap()) {
+		/* coverity[OVERRUN] */
+		arch_syscall_invoke2(*(uintptr_t *)&event, *(uintptr_t *)&events, K_SYSCALL_K_EVENT_POST);
+		return;
+	}
+#endif
+	compiler_barrier();
+	z_impl_k_event_post(event, events);
+}
+
+
+extern void z_impl_k_event_set(struct k_event * event, uint32_t events);
+
+__pinned_func
+static inline void k_event_set(struct k_event * event, uint32_t events)
+{
+#ifdef CONFIG_USERSPACE
+	if (z_syscall_trap()) {
+		/* coverity[OVERRUN] */
+		arch_syscall_invoke2(*(uintptr_t *)&event, *(uintptr_t *)&events, K_SYSCALL_K_EVENT_SET);
+		return;
+	}
+#endif
+	compiler_barrier();
+	z_impl_k_event_set(event, events);
+}
+
+
+extern uint32_t z_impl_k_event_wait(struct k_event * event, uint32_t events, bool reset, k_timeout_t timeout);
+
+__pinned_func
+static inline uint32_t k_event_wait(struct k_event * event, uint32_t events, bool reset, k_timeout_t timeout)
+{
+#ifdef CONFIG_USERSPACE
+	if (z_syscall_trap()) {
+		union { struct { uintptr_t lo, hi; } split; k_timeout_t val; } parm0;
+		parm0.val = timeout;
+		/* coverity[OVERRUN] */
+		return (uint32_t) arch_syscall_invoke5(*(uintptr_t *)&event, *(uintptr_t *)&events, *(uintptr_t *)&reset, parm0.split.lo, parm0.split.hi, K_SYSCALL_K_EVENT_WAIT);
+	}
+#endif
+	compiler_barrier();
+	return z_impl_k_event_wait(event, events, reset, timeout);
+}
+
+
+extern uint32_t z_impl_k_event_wait_all(struct k_event * event, uint32_t events, bool reset, k_timeout_t timeout);
+
+__pinned_func
+static inline uint32_t k_event_wait_all(struct k_event * event, uint32_t events, bool reset, k_timeout_t timeout)
+{
+#ifdef CONFIG_USERSPACE
+	if (z_syscall_trap()) {
+		union { struct { uintptr_t lo, hi; } split; k_timeout_t val; } parm0;
+		parm0.val = timeout;
+		/* coverity[OVERRUN] */
+		return (uint32_t) arch_syscall_invoke5(*(uintptr_t *)&event, *(uintptr_t *)&events, *(uintptr_t *)&reset, parm0.split.lo, parm0.split.hi, K_SYSCALL_K_EVENT_WAIT_ALL);
+	}
+#endif
+	compiler_barrier();
+	return z_impl_k_event_wait_all(event, events, reset, timeout);
 }
 
 

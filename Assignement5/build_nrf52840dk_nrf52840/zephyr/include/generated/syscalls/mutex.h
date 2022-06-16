@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_MUTEX_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -43,6 +46,13 @@ static inline int z_sys_mutex_kernel_lock(struct sys_mutex * mutex, k_timeout_t 
 	return z_impl_z_sys_mutex_kernel_lock(mutex, timeout);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define z_sys_mutex_kernel_lock(mutex, timeout) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_Z_SYS_MUTEX_KERNEL_LOCK, z_sys_mutex_kernel_lock, mutex, timeout); 	retval = z_sys_mutex_kernel_lock(mutex, timeout); 	sys_port_trace_syscall_exit(K_SYSCALL_Z_SYS_MUTEX_KERNEL_LOCK, z_sys_mutex_kernel_lock, mutex, timeout, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_z_sys_mutex_kernel_unlock(struct sys_mutex * mutex);
 
@@ -58,6 +68,13 @@ static inline int z_sys_mutex_kernel_unlock(struct sys_mutex * mutex)
 	compiler_barrier();
 	return z_impl_z_sys_mutex_kernel_unlock(mutex);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define z_sys_mutex_kernel_unlock(mutex) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_Z_SYS_MUTEX_KERNEL_UNLOCK, z_sys_mutex_kernel_unlock, mutex); 	retval = z_sys_mutex_kernel_unlock(mutex); 	sys_port_trace_syscall_exit(K_SYSCALL_Z_SYS_MUTEX_KERNEL_UNLOCK, z_sys_mutex_kernel_unlock, mutex, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

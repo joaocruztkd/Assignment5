@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_DAC_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int dac_channel_setup(const struct device * dev, const struct dac_
 	return z_impl_dac_channel_setup(dev, channel_cfg);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define dac_channel_setup(dev, channel_cfg) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_DAC_CHANNEL_SETUP, dac_channel_setup, dev, channel_cfg); 	retval = dac_channel_setup(dev, channel_cfg); 	sys_port_trace_syscall_exit(K_SYSCALL_DAC_CHANNEL_SETUP, dac_channel_setup, dev, channel_cfg, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_dac_write_value(const struct device * dev, uint8_t channel, uint32_t value);
 
@@ -56,6 +66,13 @@ static inline int dac_write_value(const struct device * dev, uint8_t channel, ui
 	compiler_barrier();
 	return z_impl_dac_write_value(dev, channel, value);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define dac_write_value(dev, channel, value) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_DAC_WRITE_VALUE, dac_write_value, dev, channel, value); 	retval = dac_write_value(dev, channel, value); 	sys_port_trace_syscall_exit(K_SYSCALL_DAC_WRITE_VALUE, dac_write_value, dev, channel, value, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

@@ -29,6 +29,7 @@
         "ipm_driver_api",
         "kscan_driver_api",
         "led_driver_api",
+        "mbox_driver_api",
         "mdio_driver_api",
         "pinmux_driver_api",
         "ps2_driver_api",
@@ -41,6 +42,8 @@
         "uart_driver_api",
         "wdt_driver_api",
         "uart_mux_driver_api",
+        "its_driver_api",
+        "pcie_ctrl_driver_api",
         "ivshmem_driver_api",
         "ethphy_driver_api"
     ]

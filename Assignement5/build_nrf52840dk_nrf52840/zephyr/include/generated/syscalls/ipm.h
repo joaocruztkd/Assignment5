@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_IPM_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline int ipm_send(const struct device * ipmdev, int wait, uint32_t id, 
 	return z_impl_ipm_send(ipmdev, wait, id, data, size);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ipm_send(ipmdev, wait, id, data, size) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_IPM_SEND, ipm_send, ipmdev, wait, id, data, size); 	retval = ipm_send(ipmdev, wait, id, data, size); 	sys_port_trace_syscall_exit(K_SYSCALL_IPM_SEND, ipm_send, ipmdev, wait, id, data, size, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_ipm_max_data_size_get(const struct device * ipmdev);
 
@@ -56,6 +66,13 @@ static inline int ipm_max_data_size_get(const struct device * ipmdev)
 	compiler_barrier();
 	return z_impl_ipm_max_data_size_get(ipmdev);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ipm_max_data_size_get(ipmdev) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_IPM_MAX_DATA_SIZE_GET, ipm_max_data_size_get, ipmdev); 	retval = ipm_max_data_size_get(ipmdev); 	sys_port_trace_syscall_exit(K_SYSCALL_IPM_MAX_DATA_SIZE_GET, ipm_max_data_size_get, ipmdev, retval); 	retval; })
+#endif
+#endif
 
 
 extern uint32_t z_impl_ipm_max_id_val_get(const struct device * ipmdev);
@@ -73,6 +90,13 @@ static inline uint32_t ipm_max_id_val_get(const struct device * ipmdev)
 	return z_impl_ipm_max_id_val_get(ipmdev);
 }
 
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ipm_max_id_val_get(ipmdev) ({ 	uint32_t retval; 	sys_port_trace_syscall_enter(K_SYSCALL_IPM_MAX_ID_VAL_GET, ipm_max_id_val_get, ipmdev); 	retval = ipm_max_id_val_get(ipmdev); 	sys_port_trace_syscall_exit(K_SYSCALL_IPM_MAX_ID_VAL_GET, ipm_max_id_val_get, ipmdev, retval); 	retval; })
+#endif
+#endif
+
 
 extern int z_impl_ipm_set_enabled(const struct device * ipmdev, int enable);
 
@@ -88,6 +112,13 @@ static inline int ipm_set_enabled(const struct device * ipmdev, int enable)
 	compiler_barrier();
 	return z_impl_ipm_set_enabled(ipmdev, enable);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ipm_set_enabled(ipmdev, enable) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_IPM_SET_ENABLED, ipm_set_enabled, ipmdev, enable); 	retval = ipm_set_enabled(ipmdev, enable); 	sys_port_trace_syscall_exit(K_SYSCALL_IPM_SET_ENABLED, ipm_set_enabled, ipmdev, enable, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

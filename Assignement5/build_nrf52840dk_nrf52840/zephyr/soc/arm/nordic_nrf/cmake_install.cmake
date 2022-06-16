@@ -1,8 +1,8 @@
-# Install script for directory: /home/pedreiras/Nordic/ncs/zephyr/soc/arm/nordic_nrf
+# Install script for directory: C:/ncs/v1.9.1/zephyr/soc/arm/nordic_nrf
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Zephyr-Kernel")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,16 +34,16 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/opt/gnuarmemb/bin/arm-none-eabi-objdump")
+  set(CMAKE_OBJDUMP "C:/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-objdump.exe")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/pedreiras/dados/Pedagogic-stuff/Nordic/Demos/rt_04_dataflow_shmem_threads/build_nrf52840dk_nrf52840/zephyr/soc/arm/nordic_nrf/nrf52/cmake_install.cmake")
+  include("C:/ncs/rt_02_periodic_thread_DigIO/build_nrf52840dk_nrf52840/zephyr/soc/arm/nordic_nrf/nrf52/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/pedreiras/dados/Pedagogic-stuff/Nordic/Demos/rt_04_dataflow_shmem_threads/build_nrf52840dk_nrf52840/zephyr/soc/arm/nordic_nrf/common/cmake_install.cmake")
+  include("C:/ncs/rt_02_periodic_thread_DigIO/build_nrf52840dk_nrf52840/zephyr/soc/arm/nordic_nrf/common/cmake_install.cmake")
 endif()
 

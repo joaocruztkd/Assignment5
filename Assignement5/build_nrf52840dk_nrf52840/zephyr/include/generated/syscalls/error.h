@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_ERROR_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -41,6 +44,13 @@ static inline void user_fault(unsigned int reason)
 	compiler_barrier();
 	z_impl_user_fault(reason);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define user_fault(reason) do { 	sys_port_trace_syscall_enter(K_SYSCALL_USER_FAULT, user_fault, reason); 	user_fault(reason); 	sys_port_trace_syscall_exit(K_SYSCALL_USER_FAULT, user_fault, reason); } while(false)
+#endif
+#endif
 
 
 #ifdef __cplusplus

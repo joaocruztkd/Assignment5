@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_PTP_CLOCK_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -40,6 +43,13 @@ static inline int ptp_clock_get(const struct device * dev, struct net_ptp_time *
 	compiler_barrier();
 	return z_impl_ptp_clock_get(dev, tm);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define ptp_clock_get(dev, tm) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_PTP_CLOCK_GET, ptp_clock_get, dev, tm); 	retval = ptp_clock_get(dev, tm); 	sys_port_trace_syscall_exit(K_SYSCALL_PTP_CLOCK_GET, ptp_clock_get, dev, tm, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus

@@ -4,12 +4,15 @@
 #define Z_INCLUDE_SYSCALLS_UART_MUX_H
 
 
+#include <tracing/tracing_syscall.h>
+
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
+
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -40,6 +43,13 @@ static inline const struct device * uart_mux_find(int dlci_address)
 	compiler_barrier();
 	return z_impl_uart_mux_find(dlci_address);
 }
+
+#if (CONFIG_TRACING_SYSCALL == 1)
+#ifndef DISABLE_SYSCALL_TRACING
+
+#define uart_mux_find(dlci_address) ({ 	const struct device * retval; 	sys_port_trace_syscall_enter(K_SYSCALL_UART_MUX_FIND, uart_mux_find, dlci_address); 	retval = uart_mux_find(dlci_address); 	sys_port_trace_syscall_exit(K_SYSCALL_UART_MUX_FIND, uart_mux_find, dlci_address, retval); 	retval; })
+#endif
+#endif
 
 
 #ifdef __cplusplus
